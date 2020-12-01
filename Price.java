@@ -45,12 +45,33 @@ public class Price {
 
         switch (args[0]) {
             case "-c":
-                int id = 0;
+                int idC = 0;
                 for (Product product : products) {
-                    if (product.id > id) id = product.id;
+                    if (product.id > idC) idC = product.id;
                 }
-                String name = "";
+                String nameC = "";
                 for (int i = 1; i < args.length - 2; i++) {
+                    nameC += args[i] + " ";
+                }
+                if (nameC.length() > 30) {
+                    nameC = nameC.substring(0, 30);
+                }
+                String priceC = args[args.length - 2];
+                if (priceC.length() > 8) {
+                    priceC = priceC.substring(0, 8);
+                }
+                String quantityC = args[args.length - 1];
+                if (quantityC.length() > 4) {
+                    quantityC = quantityC.substring(0, 4);
+                }
+                Product product = new Product(++idC, nameC.trim(), priceC, quantityC);
+                products.add(product);
+                break;
+            case "-u":
+                int id = Integer.parseInt(args[1]);
+
+                String name = "";
+                for (int i = 2; i < args.length - 2; i++) {
                     name += args[i] + " ";
                 }
                 if (name.length() > 30) {
@@ -64,8 +85,22 @@ public class Price {
                 if (quantity.length() > 4) {
                     quantity = quantity.substring(0, 4);
                 }
-                Product product = new Product(++id, name.trim(), price, quantity);
-                products.add(product);
+                for (Product p : products) {
+                    if (p.id == id) {
+                        p.name = name.trim();
+                        p.price = price;
+                        p.quantity = quantity;
+                    }
+                }
+                break;
+            case "-d" :
+                int idD = Integer.parseInt(args[1]);
+                int num = 0;
+                for (int x = 0; x < products.size(); x++) {
+                    Product productD = products.get(x);
+                    if (productD.id == idD) num = x;
+                }
+                products.remove(num);
         }
 
         try (FileWriter fileWriter = new FileWriter(fileName)) {
